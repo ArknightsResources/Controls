@@ -11,6 +11,13 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" /> <!--Top Button-->
+                                <RowDefinition Height="*" /> <!--Images, Illustrations, Animations...-->
+                                <RowDefinition Height="*" /> <!--Talk-->
+                            </Grid.RowDefinitions>
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
