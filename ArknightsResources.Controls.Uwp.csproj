@@ -24,6 +24,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Blue.jpg" />
+    <None Remove="Assets\Icons\Log.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Blue.jpg" />
+    <Content Include="Assets\Icons\Log.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\icon.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -42,13 +52,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Themes\Generic.xaml">
+    <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </None>
+	  <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
       <ProjectReference Include="..\ArknightsResources.Stories.Models\ArknightsResources.Stories.Models.csproj" />
 	  <ProjectReference Include="..\ArknightsResources.CustomResourceHelpers\ArknightsResources.CustomResourceHelpers.csproj" />
   </ItemGroup>
+	
+	
 </Project>

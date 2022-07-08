@@ -3,26 +3,123 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ArknightsResources.Controls.Uwp">
 
-    <Style TargetType="local:StoryPlayer" >
+    <Style TargetType="local:StoryPlayer">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:StoryPlayer">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <!--Top Button-->
-                                <RowDefinition Height="*" />
-                                <!--Images, Illustrations, Animations...-->
-                                <RowDefinition Height="*" />
-                                <!--Talk-->
-                            </Grid.RowDefinitions>
-                            <TextBlock FontSize="30">Hello!</TextBlock>
+                    <Grid Background="Black">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Image
+                            x:Name="BackgroundImage"
+                            Grid.RowSpan="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Opacity="0.9"
+                            Source="/ArknightsResources.Controls.Uwp/Assets/Blue.jpg"
+                            Stretch="UniformToFill" />
+
+                        <!--  Top Button  -->
+                        <Grid Grid.Row="0" Height="130">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Offset="0" Color="#373534" />
+                                        <GradientStop Offset="0.22" Color="#615E5B" />
+                                        <GradientStop Offset="1" Color="Transparent" />
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.MergedDictionaries>
+                                        <ResourceDictionary>
+                                            <SolidColorBrush x:Key="ButtonBackground" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
+
+                                            <SolidColorBrush x:Key="ToggleButtonBackground" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ToggleButtonBorderBrush" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ToggleButtonBorderBrushPointerOver" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="Transparent" />
+                                            <SolidColorBrush x:Key="ToggleButtonBorderBrushPressed" Color="Transparent" />
+                                        </ResourceDictionary>
+                                    </ResourceDictionary.MergedDictionaries>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+
+                            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                                <Button
+                                    x:Name="ViewLogButton"
+                                    Width="60"
+                                    Height="60"
+                                    Margin="5,0,0,0">
+                                    <BitmapIcon UriSource="/ArknightsResources.Controls.Uwp/Assets/Icons/Log.png" />
+                                </Button>
+
+                                <Button
+                                    x:Name="HideCgButton"
+                                    Width="60"
+                                    Height="60"
+                                    Margin="5,0,0,0">
+                                    <FontIcon
+                                        FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                        FontSize="25"
+                                        Glyph="&#xED1A;" />
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel
+                                Margin="5,10,0,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Orientation="Horizontal">
+                                <ToggleButton x:Name="AutoButton">
+                                    <TextBlock FontSize="15" Text="自动▶" />
+                                </ToggleButton>
+
+                                <Button x:Name="ExitButton" Margin="5,0,5,0">
+                                    <TextBlock FontSize="15" Text="退出▶" />
+                                </Button>
+                            </StackPanel>
                         </Grid>
-                    </Border>
+
+                        <!--  Text  -->
+                        <Grid
+                            Grid.Row="1"
+                            Height="140"
+                            VerticalAlignment="Bottom">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0 ">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="Transparent" Offset="1"/>
+                                        <GradientStop Color="#C8000000" Offset="0.6"/>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+
+                            <StackPanel
+                                Margin="120,10,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,20,0"
+                                    FontSize="20"
+                                    Foreground="LightGray"
+                                    Text="蓝毒" />
+                                <TextBlock FontSize="20" Text="博..博士?" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
