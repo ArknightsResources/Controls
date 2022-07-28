@@ -1,4 +1,5 @@
 ﻿using ArknightsResources.Stories.Models;
+using ArknightsResources.Stories.Models.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,9 +32,12 @@ namespace ArknightsResources.Controls.Uwp
             typeof(StoryScene),
             typeof(StoryPlayer),
             new PropertyMetadata(null, (d, e) => OnCurrentStoryChanged(d, e)));
-        
+
+        private IEnumerator<StoryCommand> StorySceneEnumerator = null;
+
         private string _CharacterName;
         private string _StoryText;
+        private bool _IsStoryPlayComplete;
 
 
         /// <summary>
@@ -51,6 +55,19 @@ namespace ArknightsResources.Controls.Uwp
         {
             get => (StoryScene)GetValue(CurrentStoryProperty);
             set => SetValue(CurrentStoryProperty, value);
+        }
+
+        /// <summary>
+        /// 指示当前的<see cref="StoryPlayer"/>是否播放完剧情
+        /// </summary>
+        public bool IsStoryPlayComplete
+        {
+            get => _IsStoryPlayComplete;
+            set
+            {
+                _IsStoryPlayComplete = value;
+                OnPropertiesChanged();
+            }
         }
 
         internal string CharacterName
@@ -78,6 +95,10 @@ namespace ArknightsResources.Controls.Uwp
             if (d is StoryPlayer player && e.NewValue is StoryScene scene)
             {
                 player.CurrentStory = scene;
+                IEnumerator<StoryCommand> enumerator = scene.GetEnumerator();
+                enumerator.Reset();
+                player.StorySceneEnumerator = enumerator;
+                player.HandleStoryCommand();
             }
         }
 
@@ -88,6 +109,50 @@ namespace ArknightsResources.Controls.Uwp
         private void OnPropertiesChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnRootGridTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            if (CurrentStory is null || StorySceneEnumerator is null)
+            {
+                return;
+            }
+
+            HandleStoryCommand();
+        }
+
+        private void HandleStoryCommand()
+        {
+            if (StorySceneEnumerator.MoveNext() == false)
+            {
+                IsStoryPlayComplete = true;
+            }
+
+            ApplyStoryCommand(StorySceneEnumerator.Current);
+
+            if (StorySceneEnumerator.Current.CanAutoContinue)
+            {
+                HandleStoryCommand();
+            }
+        }
+
+        private void ApplyStoryCommand(StoryCommand cmd)
+        {
+            switch (cmd)
+            {
+                case ShowTextWithNameCommand stwn:
+                    CharacterName = stwn.Name;
+                    StoryText = stwn.Text;
+                    break;
+                case ShowPlainTextCommand spt:
+                    StoryText = spt.Text;
+                    CharacterName = string.Empty;
+                    break;
+                default:
+                    CharacterName = cmd.GetType().Name;
+                    StoryText = cmd.ToString();
+                    break;
+            }
         }
     }
 }
