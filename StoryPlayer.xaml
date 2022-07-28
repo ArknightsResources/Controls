@@ -5,9 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ArknightsResources.Controls.Uwp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:StoryPlayer}"
     mc:Ignorable="d">
 
-    <Grid Background="Black" Tapped="OnRootGridTapped">
+    <Grid Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -18,8 +19,24 @@
             Grid.RowSpan="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            DoubleTapped="PlayNextStoryCommandDoubleTapped"
             d:Source="/ArknightsResources.Controls.Uwp/Assets/Blue.jpg"
-            Stretch="UniformToFill" />
+            Stretch="UniformToFill"
+            Tapped="PlayNextStoryCommand" />
+
+        <!--  Character Image,Subtitle...  -->
+        <Grid
+            Background="Transparent"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            DoubleTapped="PlayNextStoryCommandDoubleTapped"
+            Tapped="PlayNextStoryCommand">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Text="{x:Bind StorySubtitle, Mode=OneWay}" />
+        </Grid>
 
         <!--  Top Button  -->
         <Grid Grid.Row="0" Height="120">
@@ -53,6 +70,11 @@
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </Grid.Resources>
+
+            <StackPanel
+                Background="Transparent"
+                DoubleTapped="PlayNextStoryCommandDoubleTapped"
+                Tapped="PlayNextStoryCommand" />
 
             <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
                 <Button
@@ -92,9 +114,11 @@
 
         <!--  Text  -->
         <Grid
-            Grid.Row="1"
+            Grid.Row="2"
             Height="140"
-            VerticalAlignment="Bottom">
+            VerticalAlignment="Bottom"
+            DoubleTapped="PlayNextStoryCommandDoubleTapped"
+            Tapped="PlayNextStoryCommand">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,1" EndPoint="0,0 ">
                     <LinearGradientBrush.GradientStops>
@@ -111,6 +135,7 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal">
                 <TextBlock
+                    MinHeight="60"
                     Margin="0,0,20,0"
                     d:Text="蓝毒"
                     FontSize="20"
@@ -119,6 +144,8 @@
                 <TextBlock
                     d:Text="博..博士?"
                     FontSize="20"
+                    Width="1050"
+                    TextWrapping="WrapWholeWords"
                     Text="{x:Bind StoryText, Mode=OneWay}" />
             </StackPanel>
         </Grid>

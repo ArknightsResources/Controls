@@ -38,6 +38,7 @@ namespace ArknightsResources.Controls.Uwp
         private string _CharacterName;
         private string _StoryText;
         private bool _IsStoryPlayComplete;
+        private string _StorySubtitle;
 
 
         /// <summary>
@@ -90,6 +91,16 @@ namespace ArknightsResources.Controls.Uwp
             }
         }
 
+        internal string StorySubtitle
+        {
+            get => _StorySubtitle;
+            set
+            {
+                _StorySubtitle = value;
+                OnPropertiesChanged();
+            }
+        }
+
         private static void OnCurrentStoryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is StoryPlayer player && e.NewValue is StoryScene scene)
@@ -111,7 +122,17 @@ namespace ArknightsResources.Controls.Uwp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnRootGridTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void PlayNextStoryCommand(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            PlayNextStoryCommandCore();
+        }
+
+        private void PlayNextStoryCommandDoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            PlayNextStoryCommandCore();
+        }
+
+        private void PlayNextStoryCommandCore()
         {
             if (CurrentStory is null || StorySceneEnumerator is null)
             {
@@ -126,6 +147,7 @@ namespace ArknightsResources.Controls.Uwp
             if (StorySceneEnumerator.MoveNext() == false)
             {
                 IsStoryPlayComplete = true;
+                return;
             }
 
             ApplyStoryCommand(StorySceneEnumerator.Current);
@@ -147,6 +169,12 @@ namespace ArknightsResources.Controls.Uwp
                 case ShowPlainTextCommand spt:
                     StoryText = spt.Text;
                     CharacterName = string.Empty;
+                    break;
+                case ShowSubtitleCommand ss:
+                    StorySubtitle = ss.Text;
+                    break;
+                case HideSubtitleCommand _:
+                    StorySubtitle = string.Empty;
                     break;
                 default:
                     CharacterName = cmd.GetType().Name;
