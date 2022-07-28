@@ -26,6 +26,7 @@
   <ItemGroup>
     <None Remove="Assets\Blue.jpg" />
     <None Remove="Assets\Icons\Log.png" />
+    <None Remove="StoryPlayer.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,9 +53,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="Themes\Generic.xaml">
+    <Page Include="StoryPlayer.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-	  <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
 
