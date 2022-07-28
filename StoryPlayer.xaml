@@ -114,8 +114,12 @@
                     Margin="0,0,20,0"
                     d:Text="蓝毒"
                     FontSize="20"
-                    Foreground="LightGray" />
-                <TextBlock d:Text="博..博士?" FontSize="20" />
+                    Foreground="LightGray"
+                    Text="{x:Bind CharacterName, Mode=OneWay}" />
+                <TextBlock
+                    d:Text="博..博士?"
+                    FontSize="20"
+                    Text="{x:Bind StoryText, Mode=OneWay}" />
             </StackPanel>
         </Grid>
     </Grid>
