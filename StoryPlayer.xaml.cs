@@ -42,6 +42,7 @@ namespace ArknightsResources.Controls.Uwp
         private bool _IsStoryPlayComplete;
         private string _StorySubtitle;
         private bool _IsAuto;
+        private Visibility _TextAndTopButtonsVisibility;
 
 
         /// <summary>
@@ -127,6 +128,17 @@ namespace ArknightsResources.Controls.Uwp
             }
         }
 
+        internal Visibility TextAndTopButtonsVisibility
+        {
+            get => _TextAndTopButtonsVisibility;
+            set
+            {
+                _TextAndTopButtonsVisibility = value;
+                OnPropertiesChanged();
+            }
+        }
+
+
         private static void OnCurrentStoryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is StoryPlayer player && e.NewValue is StoryScene scene)
@@ -150,11 +162,23 @@ namespace ArknightsResources.Controls.Uwp
 
         private void PlayNextStoryCommand(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            if (TextAndTopButtonsVisibility == Visibility.Collapsed)
+            {
+                TextAndTopButtonsVisibility = Visibility.Visible;
+                return;
+            }
+
             PlayNextStoryCommandCore();
         }
 
         private void PlayNextStoryCommandDoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
+            if (TextAndTopButtonsVisibility == Visibility.Collapsed)
+            {
+                TextAndTopButtonsVisibility = Visibility.Visible;
+                return;
+            }
+
             PlayNextStoryCommandCore();
         }
 
@@ -211,7 +235,11 @@ namespace ArknightsResources.Controls.Uwp
 
         private void OnStoryAutoPlayTimerTick(object sender, object e)
         {
-            if (PlayRatio == 2d)
+            if (StoryText.Length < 8)
+            {
+                StoryAutoPlayTimer.Interval = new TimeSpan(0, 0, 5);
+            }
+            else if (PlayRatio == 2d)
             {
                 StoryAutoPlayTimer.Interval = new TimeSpan(0, 0, StoryText.Length / 4);
             }
@@ -276,6 +304,11 @@ namespace ArknightsResources.Controls.Uwp
                         break;
                 }
             }
+        }
+
+        private void HideTextAndTopButtons(object sender, RoutedEventArgs e)
+        {
+            TextAndTopButtonsVisibility = Visibility.Collapsed;
         }
     }
 }

@@ -51,11 +51,15 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="20"
-                Text="{x:Bind StorySubtitle, Mode=OneWay}" />
+                Text="{x:Bind StorySubtitle, Mode=OneWay}"
+                Visibility="{x:Bind TextAndTopButtonsVisibility, Mode=OneWay}" />
         </Grid>
 
         <!--  Top Button  -->
-        <Grid Grid.Row="0" Height="120">
+        <Grid
+            Grid.Row="0"
+            Height="120"
+            Visibility="{x:Bind TextAndTopButtonsVisibility, Mode=OneWay}">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <LinearGradientBrush.GradientStops>
@@ -102,10 +106,11 @@
                 </Button>
 
                 <Button
-                    x:Name="HideCgButton"
+                    x:Name="HideTextButton"
                     Width="60"
                     Height="60"
-                    Margin="5,0,0,0">
+                    Margin="5,0,0,0"
+                    Click="HideTextAndTopButtons">
                     <FontIcon
                         FontFamily="{ThemeResource SymbolThemeFontFamily}"
                         FontSize="25"
@@ -156,7 +161,8 @@
             Height="140"
             VerticalAlignment="Bottom"
             DoubleTapped="PlayNextStoryCommandDoubleTapped"
-            Tapped="PlayNextStoryCommand">
+            Tapped="PlayNextStoryCommand"
+            Visibility="{x:Bind TextAndTopButtonsVisibility, Mode=OneWay}">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,1" EndPoint="0,0 ">
                     <LinearGradientBrush.GradientStops>
@@ -167,13 +173,11 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <Grid
-                Margin="0,10,0,0"
-                VerticalAlignment="Center">
+            <Grid Margin="0,10,0,0" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1020" />
                     <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
 
