@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,11 +35,13 @@ namespace ArknightsResources.Controls.Uwp
             new PropertyMetadata(null, (d, e) => OnCurrentStoryChanged(d, e)));
 
         private IEnumerator<StoryCommand> StorySceneEnumerator = null;
+        private readonly DispatcherTimer StoryAutoPlayTimer = new DispatcherTimer();
 
         private string _CharacterName;
         private string _StoryText;
         private bool _IsStoryPlayComplete;
         private string _StorySubtitle;
+        private bool _IsAuto;
 
 
         /// <summary>
@@ -47,6 +50,7 @@ namespace ArknightsResources.Controls.Uwp
         public StoryPlayer()
         {
             this.InitializeComponent();
+            StoryAutoPlayTimer.Tick += OnStoryAutoPlayTimerTick;
         }
 
         /// <summary>
@@ -70,6 +74,28 @@ namespace ArknightsResources.Controls.Uwp
                 OnPropertiesChanged();
             }
         }
+
+        internal bool IsAuto
+        {
+            get => _IsAuto;
+            set
+            {
+                _IsAuto = value;
+
+                if (_IsAuto)
+                {
+                    StartAutoPlay();
+                }
+                else
+                {
+                    StopAutoPlay();
+                }
+
+                OnPropertiesChanged();
+            }
+        }
+
+        public double PlayRatio { get; set; } = 1d;
 
         internal string CharacterName
         {
@@ -180,6 +206,75 @@ namespace ArknightsResources.Controls.Uwp
                     CharacterName = cmd.GetType().Name;
                     StoryText = cmd.ToString();
                     break;
+            }
+        }
+
+        private void OnStoryAutoPlayTimerTick(object sender, object e)
+        {
+            if (PlayRatio == 2d)
+            {
+                StoryAutoPlayTimer.Interval = new TimeSpan(0, 0, StoryText.Length / 4);
+            }
+            else
+            {
+                StoryAutoPlayTimer.Interval = new TimeSpan(0, 0, StoryText.Length / 2);
+            }
+
+            PlayNextStoryCommandCore();
+        }
+
+        private void StartAutoPlay()
+        {
+            StoryAutoPlayTimer.Start();
+        }
+
+        private void StopAutoPlay()
+        {
+            StoryAutoPlayTimer.Stop();
+        }
+
+        private void AutoButtonClicked(object sender, RoutedEventArgs e)
+        {
+            switch (sender)
+            {
+                case ToggleButton toggleButton:
+                    switch (toggleButton.IsChecked)
+                    {
+                        case true:
+                            AutoButtonTextStoryBoard.Begin();
+                            return;
+                        default:
+                            AutoButtonTextStoryBoard.Stop();
+                            return;
+                    }
+                default:
+                    break;
+            }
+        }
+
+        private void AutoPlaySpeedButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton toggleButton)
+            {
+                switch (toggleButton.IsChecked)
+                {
+                    case true:
+                        PlayRatio = 2d;
+                        TextBlock textBlock = (toggleButton.Content as TextBlock);
+                        if (textBlock != null)
+                        {
+                            textBlock.Text = "2X";
+                        }
+                        break;
+                    default:
+                        PlayRatio = 1d;
+                        TextBlock textBlock2 = (toggleButton.Content as TextBlock);
+                        if (textBlock2 != null)
+                        {
+                            textBlock2.Text = "1X";
+                        }
+                        break;
+                }
             }
         }
     }

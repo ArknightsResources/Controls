@@ -13,22 +13,38 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.Resources>
+            <local:Converters x:Key="RootConverters" />
+            <Storyboard
+                x:Key="AutoButtonTextStoryBoard"
+                x:Name="AutoButtonTextStoryBoard"
+                RepeatBehavior="Forever">
+                <ObjectAnimationUsingKeyFrames
+                    Storyboard.TargetName="AutoButtonTextIcon"
+                    Storyboard.TargetProperty="(TextBlock.Text)"
+                    Duration="0:0:1.5">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="▶" />
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="▶▶" />
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="▶▶▶" />
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </Grid.Resources>
 
         <Image
             x:Name="BackgroundImage"
             Grid.RowSpan="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            DoubleTapped="PlayNextStoryCommandDoubleTapped"
             d:Source="/ArknightsResources.Controls.Uwp/Assets/Blue.jpg"
+            DoubleTapped="PlayNextStoryCommandDoubleTapped"
             Stretch="UniformToFill"
             Tapped="PlayNextStoryCommand" />
 
         <!--  Character Image,Subtitle...  -->
         <Grid
-            Background="Transparent"
             Grid.Row="0"
             Grid.RowSpan="2"
+            Background="Transparent"
             DoubleTapped="PlayNextStoryCommandDoubleTapped"
             Tapped="PlayNextStoryCommand">
             <TextBlock
@@ -102,11 +118,33 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Orientation="Horizontal">
-                <ToggleButton x:Name="AutoButton">
-                    <TextBlock FontSize="15" Text="自动▶" />
+                <ToggleButton
+                    x:Name="AutoPlaySpeedButton"
+                    Margin="0,0,10,0"
+                    Click="AutoPlaySpeedButtonClicked"
+                    Visibility="{x:Bind AutoButton.IsChecked, Mode=OneWay}">
+                    <TextBlock FontSize="15" Text="1x" />
                 </ToggleButton>
 
-                <Button x:Name="ExitButton" Margin="5,0,5,0">
+                <ToggleButton
+                    x:Name="AutoButton"
+                    Click="AutoButtonClicked"
+                    FontSize="15"
+                    IsChecked="{x:Bind IsAuto, Mode=TwoWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            x:Name="AutoButtonText"
+                            HorizontalAlignment="Left"
+                            Text="自动" />
+                        <TextBlock
+                            x:Name="AutoButtonTextIcon"
+                            Width="45"
+                            HorizontalAlignment="Right"
+                            Text="▶" />
+                    </StackPanel>
+                </ToggleButton>
+
+                <Button x:Name="ExitButton" Margin="0,0,40,0">
                     <TextBlock FontSize="15" Text="退出▶" />
                 </Button>
             </StackPanel>
@@ -129,12 +167,19 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <StackPanel
-                Margin="120,10,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+            <Grid
+                Margin="0,10,0,0"
+                VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+
                 <TextBlock
+                    x:Name="CharacterNameTextBlock"
+                    Grid.Column="1"
                     MinHeight="60"
                     Margin="0,0,20,0"
                     d:Text="蓝毒"
@@ -142,12 +187,13 @@
                     Foreground="LightGray"
                     Text="{x:Bind CharacterName, Mode=OneWay}" />
                 <TextBlock
+                    x:Name="StoryTextTextBlock"
+                    Grid.Column="2"
                     d:Text="博..博士?"
                     FontSize="20"
-                    Width="1050"
-                    TextWrapping="WrapWholeWords"
-                    Text="{x:Bind StoryText, Mode=OneWay}" />
-            </StackPanel>
+                    Text="{x:Bind StoryText, Mode=OneWay}"
+                    TextWrapping="WrapWholeWords" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>
