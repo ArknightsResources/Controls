@@ -1,20 +1,21 @@
-﻿using ArknightsResources.Stories.Models;
+﻿using ArknightsResources.Controls.Uwp.Models;
+using ArknightsResources.Stories.Models;
 using ArknightsResources.Stories.Models.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Windows.UI.Xaml.Media;
 
 namespace ArknightsResources.Controls.Uwp
 {
@@ -36,6 +37,7 @@ namespace ArknightsResources.Controls.Uwp
 
         private IEnumerator<StoryCommand> StorySceneEnumerator = null;
         private readonly DispatcherTimer StoryAutoPlayTimer = new DispatcherTimer();
+        private readonly ObservableCollection<StoryHistoryItem> StoryHistoryList = new ObservableCollection<StoryHistoryItem>();
 
         private string _CharacterName;
         private string _StoryText;
@@ -43,6 +45,7 @@ namespace ArknightsResources.Controls.Uwp
         private string _StorySubtitle;
         private bool _IsAuto;
         private Visibility _TextAndTopButtonsVisibility;
+        private bool _LoadStoryHistory;
 
 
         /// <summary>
@@ -74,6 +77,21 @@ namespace ArknightsResources.Controls.Uwp
                 _IsStoryPlayComplete = value;
                 OnPropertiesChanged();
             }
+        }
+        internal bool LoadStoryHistory
+        {
+            get => _LoadStoryHistory;
+            set
+            {
+                _LoadStoryHistory = value;
+                OnPropertiesChanged();
+                OnPropertiesChanged(nameof(IsTopButtonsTabStop));
+            }
+        }
+
+        internal bool IsTopButtonsTabStop
+        {
+            get => !_LoadStoryHistory;
         }
 
         internal bool IsAuto
@@ -188,7 +206,6 @@ namespace ArknightsResources.Controls.Uwp
             {
                 return;
             }
-
             HandleStoryCommand();
         }
 
@@ -215,16 +232,39 @@ namespace ArknightsResources.Controls.Uwp
                 case ShowTextWithNameCommand stwn:
                     CharacterName = stwn.Name;
                     StoryText = stwn.Text;
+                    StoryHistoryList.Add(new StoryHistoryItem(stwn.Name, stwn.Text, StoryHistoryItemType.StoryText));
                     break;
                 case ShowPlainTextCommand spt:
                     StoryText = spt.Text;
                     CharacterName = string.Empty;
+                    StoryHistoryList.Add(new StoryHistoryItem(string.Empty, spt.Text, StoryHistoryItemType.StoryText));
                     break;
                 case ShowSubtitleCommand ss:
                     StorySubtitle = ss.Text;
+                    StoryHistoryList.Add(new StoryHistoryItem(string.Empty, ss.Text, StoryHistoryItemType.StoryText));
                     break;
                 case HideSubtitleCommand _:
                     StorySubtitle = string.Empty;
+                    break;
+                case DecisionCommand dec:
+                    //TODO: Apply it in user interface
+                    StringBuilder stringBuilder = new StringBuilder();
+                    foreach (var item in dec.AvailableOptions)
+                    {
+                        stringBuilder.AppendLine($"[{item}]");
+                        var textCmd = from text in dec[item] where text is TextCommand select (TextCommand)text;
+                        foreach (var itemText in textCmd)
+                        {
+                            if (itemText is ShowTextWithNameCommand stwn)
+                            {
+                                StoryHistoryList.Add(new StoryHistoryItem(stwn.Name, stwn.Text, StoryHistoryItemType.Decision));
+                            }
+                            else
+                            {
+                                StoryHistoryList.Add(new StoryHistoryItem(string.Empty, itemText.Text, StoryHistoryItemType.Decision));
+                            }
+                        }
+                    }
                     break;
                 default:
                     CharacterName = cmd.GetType().Name;
@@ -235,7 +275,7 @@ namespace ArknightsResources.Controls.Uwp
 
         private void OnStoryAutoPlayTimerTick(object sender, object e)
         {
-            if (StoryText.Length < 8)
+            if (StoryText.Length < 10)
             {
                 StoryAutoPlayTimer.Interval = new TimeSpan(0, 0, 5);
             }
@@ -251,15 +291,9 @@ namespace ArknightsResources.Controls.Uwp
             PlayNextStoryCommandCore();
         }
 
-        private void StartAutoPlay()
-        {
-            StoryAutoPlayTimer.Start();
-        }
+        private void StartAutoPlay() => StoryAutoPlayTimer.Start();
 
-        private void StopAutoPlay()
-        {
-            StoryAutoPlayTimer.Stop();
-        }
+        private void StopAutoPlay() => StoryAutoPlayTimer.Stop();
 
         private void AutoButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -306,9 +340,24 @@ namespace ArknightsResources.Controls.Uwp
             }
         }
 
-        private void HideTextAndTopButtons(object sender, RoutedEventArgs e)
+        private void HideTextAndTopButtons(object sender, RoutedEventArgs e) => TextAndTopButtonsVisibility = Visibility.Collapsed;
+
+        private void ShowStoryHistory(object sender, RoutedEventArgs e) => LoadStoryHistory = true;
+
+        private void HideStoryHistory(object sender, RoutedEventArgs e) => LoadStoryHistory = false;
+
+        internal static Brush GetStoryHistoryItemColor(StoryHistoryItemType type)
         {
-            TextAndTopButtonsVisibility = Visibility.Collapsed;
+            switch (type)
+            {
+                case StoryHistoryItemType.Decision:
+                    //#00a0eb
+                    return new SolidColorBrush(new Windows.UI.Color() { R = 0, G = 160, B = 234 });
+                case StoryHistoryItemType.StoryText:
+                default:
+                    //#ffd801
+                    return new SolidColorBrush(new Windows.UI.Color() { R = 255, G = 216, B = 1 });
+            }
         }
     }
 }
