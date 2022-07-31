@@ -248,20 +248,19 @@ namespace ArknightsResources.Controls.Uwp
                     break;
                 case DecisionCommand dec:
                     //TODO: Apply it in user interface
-                    StringBuilder stringBuilder = new StringBuilder();
                     foreach (var item in dec.AvailableOptions)
                     {
-                        stringBuilder.AppendLine($"[{item}]");
+                        StoryHistoryList.Add(new StoryHistoryItem(string.Empty, $"[{item}]", StoryHistoryItemType.Decision));
                         var textCmd = from text in dec[item] where text is TextCommand select (TextCommand)text;
                         foreach (var itemText in textCmd)
                         {
                             if (itemText is ShowTextWithNameCommand stwn)
                             {
-                                StoryHistoryList.Add(new StoryHistoryItem(stwn.Name, stwn.Text, StoryHistoryItemType.Decision));
+                                StoryHistoryList.Add(new StoryHistoryItem($"{stwn.Name}", $"\t{stwn.Text}", StoryHistoryItemType.Decision));
                             }
                             else
                             {
-                                StoryHistoryList.Add(new StoryHistoryItem(string.Empty, itemText.Text, StoryHistoryItemType.Decision));
+                                StoryHistoryList.Add(new StoryHistoryItem(string.Empty, $"\t{itemText.Text}", StoryHistoryItemType.Decision));
                             }
                         }
                     }
