@@ -12,8 +12,9 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <PackageIcon>icon.png</PackageIcon>
-	<EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -46,7 +47,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	  <PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44">
+      <PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -61,8 +62,8 @@
 
   <ItemGroup>
       <ProjectReference Include="..\ArknightsResources.Stories.Models\ArknightsResources.Stories.Models.csproj" />
-	  <ProjectReference Include="..\ArknightsResources.CustomResourceHelpers\ArknightsResources.CustomResourceHelpers.csproj" />
+      <ProjectReference Include="..\ArknightsResources.CustomResourceHelpers\ArknightsResources.CustomResourceHelpers.csproj" />
   </ItemGroup>
-	
-	
+    
+    
 </Project>
