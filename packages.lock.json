@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     "UAP,Version=v10.0.19041": {
+      "Microsoft.NETCore.Platforms": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "ok+RPAtESz/9MUXeIEz6Lv5XAGQsaNmEYXMsgVALj4D7kqC8gveKWXWXbufLySR2fWrwZf8smyN5RmHu0e4BHA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.12, )",
@@ -63,11 +69,6 @@
           "runtime.win10-x64.Microsoft.Net.UWPCoreRuntimeSdk": "2.2.12",
           "runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk": "2.2.12"
         }
-      },
-      "Microsoft.NETCore.Platforms": {
-        "type": "Transitive",
-        "resolved": "2.1.0",
-        "contentHash": "ok+RPAtESz/9MUXeIEz6Lv5XAGQsaNmEYXMsgVALj4D7kqC8gveKWXWXbufLySR2fWrwZf8smyN5RmHu0e4BHA=="
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
