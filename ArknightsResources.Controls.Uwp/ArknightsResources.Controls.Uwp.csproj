@@ -16,7 +16,7 @@
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
       <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -56,8 +56,8 @@
   </ItemGroup>
 
   <ItemGroup>
-      <ProjectReference Include="..\ArknightsResources.Stories.Models\ArknightsResources.Stories.Models.csproj" />
-      <ProjectReference Include="..\ArknightsResources.CustomResourceHelpers\ArknightsResources.CustomResourceHelpers.csproj" />
+      <ProjectReference Include="..\..\ArknightsResources.Stories.Models\ArknightsResources.Stories.Models.csproj" />
+      <ProjectReference Include="..\..\ArknightsResources.CustomResourceHelpers\ArknightsResources.CustomResourceHelpers.csproj" />
   </ItemGroup>
     
     
